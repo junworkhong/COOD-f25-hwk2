@@ -7,7 +7,7 @@ import java.util.*;
 
 public class WordSearch {
 	
-	public static Map<String, Set<String>> buildMap(String dirName) {
+	public static Map<String, Set<String>> buildMap(String dirName) throws FileNotFoundException {
 		File dir = new File(dirName);	// create a File object for this directory
 		
 		// make sure it exists and is actually a directory
@@ -19,40 +19,73 @@ public class WordSearch {
 		File[] files = dir.listFiles();		// get the Files in the specified directory
 		
 		// Implement the rest of this method starting from here!
+		HashMap<String, Set<String>> hash = new HashMap<>();
 
-		// this is for debugging, just to make sure it's reading the right files
-        for (File file : files) {
-            System.out.println(file.getName());
-        }
+		if (files == null) {
+			throw new IllegalArgumentException("Directory is empty");
+		}
+
+		for (File file : files) {
+			Scanner scanFile = new Scanner(file);
+			while (scanFile.hasNext()) {
+				String key = scanFile.next().toLowerCase();
+				if (!hash.containsKey(key)) {
+					hash.put(key, new HashSet<>());
+				}
+				hash.get(key).add(file.getName());
+			}
+
+		}
+
+//		// this is for debugging, just to make sure it's reading the right files
+//        for (File file : files) {
+//            System.out.println(file.getName());
+//        }
 		
-		return Collections.EMPTY_MAP; // change this as necessary
+		return hash; // change this as necessary
 		
 	}
 	
 	public static List<String> search(String[] terms, Map<String, Set<String>> map) {
 		// Implement this method starting from here!
+		LinkedList<String> myList = new LinkedList<>();
 
-		return Collections.EMPTY_LIST; // change this as necessary
-	}
-	
-	public static void main(String[] args) {
-		Map<String, Set<String>> map = buildMap(args[0]);
-		//System.out.println(map); 					// for debugging purposes
-		
-		System.out.print("Enter a term to search for: ");
-		
-		try (Scanner in = new Scanner(System.in)) { // create a Scanner to read from stdin
-			String input = in.nextLine();			// read the entire line that was entered
-			String[] terms = input.split(" ");		// separate tokens based on a single whitespace
-			List<String> list = search(terms, map);	// search for the tokens in the Map
-			for (String file : list) {				// print the results
-				System.out.println(file);
+		for (String term : terms) {
+			if (map.containsKey(term)) {
+				Set<String> files = map.get(term);
+				if (!myList.contains(files)) {
+					myList.addAll(files);
+				}
 			}
 		}
-		catch (Exception e) {
+		Collections.sort(myList);
+		return myList; // change this as necessary
+	}
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		Map<String, Set<String>> map = buildMap(args[0]);
+//		System.out.println(map); 					// for debugging purposes
+		for (String word : map.keySet()) {
+			Set<String> files = map.get(word);
+			System.out.println(word + " -> " + files);
+		}
+
+		try (Scanner in = new Scanner(System.in)) { // create a Scanner to read from stdin
+			while (true) {
+				System.out.print("Enter a term to search for: ");
+				String input = in.nextLine();            // read the entire line that was entered
+				if (input.isEmpty()) {
+					break;
+				}
+				String[] terms = input.split(" ");        // separate tokens based on a single whitespace
+				List<String> list = search(terms, map);    // search for the tokens in the Map
+				for (String file : list) {                // print the results
+					System.out.println(file);
+				}
+			}
+		}catch(Exception e){
 			// oops! something went wrong
 			e.printStackTrace();
 		}
 	}
-
 }
