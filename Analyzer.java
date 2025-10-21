@@ -92,7 +92,33 @@ public class Analyzer {
             return 0;
         }
 
-		return 0;
+        String[] words = sentence.split(" ");
+        Map<String, Integer> countMap = new HashMap<>();
+        Map<String, Double> sumMap = new HashMap<>();
+
+        for (String word : words) {
+            String newWord = word.toLowerCase();
+            if (newWord.equals(",") || (newWord.equals("'s")) || (newWord.equals(".")))
+                continue;
+            if (!wordScores.containsKey(newWord))
+                continue;
+            if (wordScores.containsKey(newWord) && !countMap.containsKey(newWord)) {
+                countMap.put(newWord, 1);
+                sumMap.put(newWord, wordScores.get(newWord));
+            } else{
+                countMap.put(newWord, countMap.get(newWord) + 1);
+                sumMap.put(newWord, sumMap.get(newWord) + wordScores.get(newWord));
+            }
+        }
+
+        double score = 0.0;
+        int counter = 0;
+        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+            score = score + sumMap.get(entry.getKey());
+            counter = counter + countMap.get(entry.getKey());
+        }
+
+		return score/counter;
 	}
 
     /**
@@ -106,7 +132,15 @@ public class Analyzer {
 //        newSet = new HashSet<>();
 //        newSet.add(new Sentence(2, "I like cake and could eat cake all day ."));
 //        newSet.add(new Sentence(1, "I hope the dog does not eat my cake ."));
-        System.out.println(calculateWordScores(newSet));
+//        System.out.println(calculateWordScores(newSet));
+        Map<String, Double> scores = new HashMap<>();
+        scores.put("dogs", 1.5);
+        scores.put("are", 0.0);
+        scores.put("cute", 2.0);
+        double score = calculateSentenceScore(scores, "dogs are cute");
+        System.out.println(score);
+        score = calculateSentenceScore(scores, "dogs ?are cute");
+        System.out.println(score);
     }
 
 }
