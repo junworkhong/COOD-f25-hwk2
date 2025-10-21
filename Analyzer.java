@@ -4,6 +4,7 @@
  * This class contains the methods used for conducting a simple sentiment analysis.
  */
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Analyzer {
@@ -12,15 +13,65 @@ public class Analyzer {
 	 * This method calculates the weighted average for each word in all the Sentences.
 	 * This method is case-insensitive and all words should be stored in the Map using
 	 * only lowercase letters.
-	 * 
-	 * @param sentences Set containing Sentence objects with words to score
+	 //* @param sentences Set containing Sentence objects with words to score
 	 * @return Map of each word to its weighted average; null if input is null
 	 */
+
+//    @Override
+//    public int hashCode() {
+//        return 7;
+//    }
+
 	public static Map<String, Double> calculateWordScores(Set<Sentence> sentences) {
 		/*
 		 * Implement this method in Step 2
 		 */
-		return null;
+        if (sentences == null) {
+            return null;
+        }
+
+        if (sentences.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        Map<String, Double> myMap = new HashMap<>();
+        Map<String, Integer> countMap = new HashMap<>();
+
+        for (Sentence sentence : sentences) {
+            String line = sentence.getText();
+            int score = sentence.getScore();
+
+            if (line.length() < 7) {
+                continue;
+            }
+
+            boolean startsWithDigit = score >= 0 && score <= 2;
+            boolean startsWithNegative = score < 0;
+            if ((!startsWithDigit && !startsWithNegative)) {
+                continue;
+            }
+
+            String[] words = sentence.getText().split(" ");
+            for (String word : words) {
+                String newWord = word.toLowerCase();
+                if (newWord.equals(",") || (newWord.equals("'s")) || (newWord.equals(".")))
+                    continue;
+                if (!myMap.containsKey(newWord)) {
+                    myMap.put(newWord, (double) sentence.getScore());
+                    countMap.put(newWord, 1);
+                }else {
+                    double oldAvg = myMap.get(newWord);
+                    myMap.put(newWord, (double) sentence.getScore() + oldAvg);
+                    countMap.put(newWord, countMap.get(newWord) + 1);
+                }
+            }
+        }
+
+        //to get the averages
+        for (Map.Entry<String, Double> entry : myMap.entrySet()) {
+            myMap.put(entry.getKey(), entry.getValue()/countMap.get(entry.getKey()));
+        }
+		return myMap;
 	}
 	
 	/**
@@ -37,6 +88,10 @@ public class Analyzer {
 		/*
 		 * Implement this method in Step 3
 		 */
+        if (wordScores == null || sentence == null) {
+            return 0;
+        }
+
 		return 0;
 	}
 
@@ -46,8 +101,12 @@ public class Analyzer {
      * Note that this is _NOT_ the main() method for the whole sentiment analysis program!
      * Just use it for testing this class. It is not considered for grading.
      */
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws FileNotFoundException {
+        Set<Sentence> newSet = Reader.readFile(args[0]);
+//        newSet = new HashSet<>();
+//        newSet.add(new Sentence(2, "I like cake and could eat cake all day ."));
+//        newSet.add(new Sentence(1, "I hope the dog does not eat my cake ."));
+        System.out.println(calculateWordScores(newSet));
     }
 
 }

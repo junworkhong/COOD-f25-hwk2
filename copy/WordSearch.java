@@ -1,3 +1,5 @@
+package copy;
+
 import java.io.*;
 import java.util.*;
 
@@ -48,30 +50,21 @@ public class WordSearch {
 	
 	public static List<String> search(String[] terms, Map<String, Set<String>> map) {
 		// Implement this method starting from here!
-		Set<String> mySet = new TreeSet<>();
-
-        if (terms == null || terms.length == 0) {
-            return new ArrayList<>();
-        }
+		TreeSet<String> mySet = new TreeSet<>();
 
 		for (String term : terms) {
-            int counter1, counter2, counter3 = 0;
-            if (map.containsKey(term)) {
-                Set<String> files = map.get(term);
+			if (map.containsKey(term)) {
+				Set<String> files = map.get(term);
                 mySet.addAll(files);
-            }
-            if (!map.containsKey(term)) {
-                return new ArrayList<>();
-            }
-        }
+			}
+		}
+//		Collections.sort(myList);
+        ArrayList<String> myList = new ArrayList<>(mySet);
+		return myList; // change this as necessary
 
         //make counters for all 3, do switch?
         //make new list and keep order
         //use map.getValue
-
-        List<String> myList = new ArrayList<>(mySet);
-		//Collections.sort(mySet);
-		return myList; // change this as necessary
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {

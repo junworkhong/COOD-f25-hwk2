@@ -1,5 +1,4 @@
-import java.io.FileNotFoundException;
-import java.util.Set;
+package copy;
 
 /**
  * @author [your name here]
@@ -9,7 +8,7 @@ import java.util.Set;
 
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         // implement this method in Step 4
     }
 }
