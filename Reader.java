@@ -1,8 +1,13 @@
 /**
- * @author [YOUR NAME HERE!]
+ * @author [Jun Hong]
  *
  * This class contains a method for reading from a file and creating Sentence objects
  * for a sentiment analysis program.
+ *
+ * Justification:
+ * For the readFile() method I chose a HashSet because it doesn't need to be sorted in any order,
+ * otherwise I would've chosen a TreeSet. A HashSet operates using constant time, so it is quicker than a
+ * TreeSet as well, therefore I chose a HashSet.
  */
 
 import java.io.File;
@@ -25,8 +30,8 @@ public class Reader {
 		 */
         File file = new File(filename);
         if (!file.exists() || !file.isFile()) {
-            throw new IllegalArgumentException("File " + filename + " does not exist or is not a file.");
-//            return null;
+//            throw new IllegalArgumentException("File " + filename + " does not exist or is not a file.");
+            return null;
         }
 
 //        File[] files = file.listFiles();

@@ -1,7 +1,12 @@
 /**
- * @author [YOUR NAME HERE!]
+ * @author [Jun Hong]
  *
  * This class contains the methods used for conducting a simple sentiment analysis.
+ *
+ * Justification:
+ * I chose a HashMap instead of a TreeMap because there was no need for an order.
+ * HashMaps are faster for get, put, and remove operations so I went with the
+ * HashMap instead of the TreeMap.
  */
 
 import java.io.FileNotFoundException;
@@ -21,6 +26,8 @@ public class Analyzer {
 //    public int hashCode() {
 //        return 7;
 //    }
+
+    private static Map<Double, String> storeValues = new HashMap<>();
 
 	public static Map<String, Double> calculateWordScores(Set<Sentence> sentences) {
 		/*
@@ -92,6 +99,13 @@ public class Analyzer {
             return 0;
         }
 
+        for (Map.Entry<Double, String> entry: storeValues.entrySet()) {
+            if (entry.getValue().equals(sentence)) {
+                return entry.getKey();
+            }
+        }
+
+
         String[] words = sentence.split(" ");
         Map<String, Integer> countMap = new HashMap<>();
         Map<String, Double> sumMap = new HashMap<>();
@@ -118,7 +132,9 @@ public class Analyzer {
             counter = counter + countMap.get(entry.getKey());
         }
 
-		return score/counter;
+        double calculatedScore = score / counter;
+        storeValues.put(calculatedScore, sentence);
+		return calculatedScore;
 	}
 
     /**
@@ -129,10 +145,10 @@ public class Analyzer {
      */
     public static void main(String[] args) throws FileNotFoundException {
         Set<Sentence> newSet = Reader.readFile(args[0]);
-//        newSet = new HashSet<>();
-//        newSet.add(new Sentence(2, "I like cake and could eat cake all day ."));
-//        newSet.add(new Sentence(1, "I hope the dog does not eat my cake ."));
-//        System.out.println(calculateWordScores(newSet));
+        newSet = new HashSet<>();
+        newSet.add(new Sentence(2, "I like cake and could eat cake all day ."));
+        newSet.add(new Sentence(1, "I hope the dog does not eat my cake ."));
+        System.out.println(calculateWordScores(newSet));
         Map<String, Double> scores = new HashMap<>();
         scores.put("dogs", 1.5);
         scores.put("are", 0.0);

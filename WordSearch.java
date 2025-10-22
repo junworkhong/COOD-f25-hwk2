@@ -3,6 +3,18 @@ import java.util.*;
 
 /*
  * Implements a text search engine for a collection of documents in the same directory.
+ *
+ * Justification:
+ * For the buildMap() method, I chose HashMap and HashSet, because the buildMap() method
+ * doesn't require the files to be sorted in any order. HashMaps and HashSets are faster
+ * for operations than TreeMaps and TreeSets, generally.
+ *
+ * For the search() method, I decided to go with a TreeSet so that the results would be sorted
+ * in order. For the List, I chose a LinkedList instead of an ArrayList because I'm only
+ * copying over the results of the set into the list one time, and LinkedLists only use the
+ * memory that it needs.
+ *
+ * Case 4 and 5 are not implemented, because I tried for a few days but could not get it to work.
  */
 
 public class WordSearch {
@@ -51,25 +63,46 @@ public class WordSearch {
 		Set<String> mySet = new TreeSet<>();
 
         if (terms == null || terms.length == 0) {
-            return new ArrayList<>();
+            return new LinkedList<>();
         }
 
+        Map<String, Integer> countMap = new HashMap<>();
+//        countMap.put("file1.txt", 0);
+//        countMap.put("file2.txt", 0);
+//        countMap.put("file3.txt", 0);
+
 		for (String term : terms) {
-            int counter1, counter2, counter3 = 0;
+            int counter = 0;
+//            if (map.containsKey(term) && countMap.containsKey(term)) {
             if (map.containsKey(term)) {
-                Set<String> files = map.get(term);
-                mySet.addAll(files);
+//                Set<String> files = map.get(term);
+//                mySet.addAll(files);
+                mySet.addAll(map.get(term));
+//                countMap.put(term, countMap.get(term) + 1);
             }
-            if (!map.containsKey(term)) {
-                return new ArrayList<>();
-            }
+//            for (Map.Entry<String, Set<String>> entry : map.entrySet()) {
+//                if (entry.getValue().contains(term))
+//                    countMap.put(term, entry.getValue().size());
+//            }
+
+//            countMap.put(term, counter);
+//            else if (map.containsKey(term) && !countMap.containsKey(term)) {
+//                Set<String> files = map.get(term);
+//                mySet.addAll(files);
+////                countMap.put(term, 1);
+//            }
+//            if (!map.containsKey(term)) {
+//                return new LinkedList<>();
+//            }
         }
 
         //make counters for all 3, do switch?
         //make new list and keep order
         //use map.getValue
+        //maybe another Map?
+//        System.out.println(countMap);
 
-        List<String> myList = new ArrayList<>(mySet);
+        List<String> myList = new LinkedList<>(mySet);
 		//Collections.sort(mySet);
 		return myList; // change this as necessary
 	}
