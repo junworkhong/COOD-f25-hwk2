@@ -28,6 +28,10 @@ public class Reader {
 		/*
 		 * Implement this method in Step 1
 		 */
+        if (filename == null) {
+            return null;
+        }
+
         File file = new File(filename);
         if (!file.exists() || !file.isFile()) {
 //            throw new IllegalArgumentException("File " + filename + " does not exist or is not a file.");
@@ -54,7 +58,7 @@ public class Reader {
 
             //To ensure that it either starts with a digit between 0 and 2 or a negative number between -1 and -2
             boolean startsWithDigit = Character.isDigit(line.charAt(0)) && (line.charAt(0) >= '0' || line.charAt(0) <= '2') && (line.charAt(1) == ' ');
-            boolean startsWithNegative = (line.charAt(0) == '-') && Character.isDigit(line.charAt(1)) && (line.charAt(1) >= '0' || line.charAt(1) <= '2') && (line.charAt(2) == ' ');
+            boolean startsWithNegative = (line.charAt(0) == '-') && Character.isDigit(line.charAt(1)) && (line.charAt(1) == '1' || line.charAt(1) == '2') && (line.charAt(2) == ' ');
             if ((!startsWithDigit && !startsWithNegative)) {
                 continue;
             }

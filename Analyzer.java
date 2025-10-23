@@ -45,6 +45,9 @@ public class Analyzer {
         Map<String, Integer> countMap = new HashMap<>();
 
         for (Sentence sentence : sentences) {
+            if (sentence.getText() == null)
+                continue;
+
             String line = sentence.getText();
             int score = sentence.getScore();
 
@@ -52,8 +55,11 @@ public class Analyzer {
                 continue;
             }
 
+            if (!Character.isAlphabetic(line.charAt(0)))
+                continue;
+
             boolean startsWithDigit = score >= 0 && score <= 2;
-            boolean startsWithNegative = score < 0;
+            boolean startsWithNegative = score < 0 && score >= -2;
             if ((!startsWithDigit && !startsWithNegative)) {
                 continue;
             }
@@ -62,6 +68,8 @@ public class Analyzer {
             for (String word : words) {
                 String newWord = word.toLowerCase();
                 if (newWord.equals(",") || (newWord.equals("'s")) || (newWord.equals(".")))
+                    continue;
+                if (!Character.isAlphabetic(word.charAt(0)))
                     continue;
                 if (!myMap.containsKey(newWord)) {
                     myMap.put(newWord, (double) sentence.getScore());
@@ -95,7 +103,7 @@ public class Analyzer {
 		/*
 		 * Implement this method in Step 3
 		 */
-        if (wordScores == null || sentence == null) {
+        if (wordScores == null || sentence == null || wordScores.isEmpty() || sentence.isEmpty()) {
             return 0;
         }
 
@@ -104,7 +112,6 @@ public class Analyzer {
                 return entry.getKey();
             }
         }
-
 
         String[] words = sentence.split(" ");
         Map<String, Integer> countMap = new HashMap<>();
